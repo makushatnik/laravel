@@ -7,8 +7,13 @@ use Illuminate\Http\Request;
 class PostController extends Controller
 {
     public function index() {
-        return 'Index';
-        // return view('posts');
+        $post = (object) [
+            'id' => 123,
+            'title' => 'Post title',
+            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
+        ];
+        $posts = array_fill(0, 10, $post);
+        return view('posts.index', compact('posts'));
     }
 
     public function create() {
@@ -20,12 +25,21 @@ class PostController extends Controller
     }
 
     public function show($post_id) {
-        return 'Show #'.$post_id;
-        // return view('posts.show', ['post_id' => $post_id]);
+        $post = (object) [
+            'id' => 123,
+            'title' => 'Post title',
+            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
+        ];
+        return view('posts.show', compact('post'));
     }
 
     public function edit($post_id) {
-        return view('posts.edit');
+        $post = (object) [
+            'id' => 123,
+            'title' => 'Post title',
+            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
+        ];
+        return view('posts.edit', compact('post'));
     }
 
     public function update(Request $request, $post_id) {

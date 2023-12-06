@@ -13,4 +13,8 @@ class Controller extends BaseController
     public function health() {
         return 'OK';
     }
+
+    public function home() {
+        return view('home');
+    }
 }

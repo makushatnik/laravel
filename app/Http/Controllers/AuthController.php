@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     public function login_form() {
-        return view('auth.login');
+        return view('login');
     }
 
     public function login(Request $request) {
@@ -15,10 +15,15 @@ class AuthController extends Controller
     }
 
     public function register_form() {
-        return view('auth.register');
+        return view('register');
     }
 
     public function register(Request $request) {
         return 'Registered!';
+    }
+
+    public function logout(Request $request) {
+        $request->user()->logout();
+        return view('home');
     }
 }
