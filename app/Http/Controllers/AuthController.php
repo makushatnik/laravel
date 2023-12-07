@@ -11,6 +11,13 @@ class AuthController extends Controller
     }
 
     public function login(Request $request) {
+        // $data = $request->all();
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $remember = $request->boolean('remember');
+
+        alert('Welcome');
+
         return redirect('/profile');
     }
 
@@ -19,11 +26,22 @@ class AuthController extends Controller
     }
 
     public function register(Request $request) {
-        return 'Registered!';
+        // $data = $request->all();
+        $name = $request->input('name');
+        $email = $request->input('email');
+        $password = $request->input('password');
+        $agreement = $request->boolean('agreement');
+
+        alert('You\'ve been registered successfully!');
+
+        return redirect('/profile');
     }
 
     public function logout(Request $request) {
         $request->user()->logout();
+
+        alert('Your password had been stolen!');
+
         return view('home');
     }
 }

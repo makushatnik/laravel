@@ -15,6 +15,8 @@
     </x-slot>
 </x-title>
 
+@include('posts.filter')
+
 @if(empty($posts))
     {{ __('No Posts yet.') }}
 @else

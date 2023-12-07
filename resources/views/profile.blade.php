@@ -1,13 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-</head>
-<body>
-    <h3>Profile Page</h3>
-    <br>
-    <p>If you're here that means you're aunthenticated.</p>
-</body>
-</html>
+@extends('layouts.auth')
+
+@section('title', 'Profile Page')
+@section('auth.card-title', 'Profile')
+
+@section('auth.card-body')
+<p>If you're here, that means you're authenticated.</p>
+@endsection

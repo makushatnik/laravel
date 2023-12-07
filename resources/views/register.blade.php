@@ -26,7 +26,7 @@
     </x-form-item>
 
     <x-form-item>
-        <x-checkbox name="remember" id="remember" checked>
+        <x-checkbox name="agreement" checked>
             {{ __('I agree to the processing of personal data') }}
         </x-checkbox>
     </x-form-item>

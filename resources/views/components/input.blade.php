@@ -1,5 +1,8 @@
-<input type="text" {{ $attributes->class([
+@props('value')
+
+<input {{ $attributes->class([
     'form-control',
 ])->merge([
-    'type' => 'text'
+    'type' => 'text',
+    'value' => (old($attributes->get('name')) ?: $value),
 ]) }}>
