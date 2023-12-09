@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\SignupRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class AuthController extends Controller
@@ -10,11 +13,14 @@ class AuthController extends Controller
         return view('login');
     }
 
-    public function login(Request $request) {
-        // $data = $request->all();
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $remember = $request->boolean('remember');
+    public function login(LoginRequest $request) {
+        
+        $validated = $request->validated();
+        $validated['password'] = bcrypt($validated['password']);
+
+        if ($validated['remember']) {
+            session(['user' => '']);
+        }
 
         alert('Welcome');
 
@@ -25,12 +31,12 @@ class AuthController extends Controller
         return view('register');
     }
 
-    public function register(Request $request) {
-        // $data = $request->all();
-        $name = $request->input('name');
-        $email = $request->input('email');
-        $password = $request->input('password');
-        $agreement = $request->boolean('agreement');
+    public function register(SignupRequest $request) {
+        
+        $validated = $request->validated();
+        $validated['password'] = bcrypt($validated['password']);
+
+        User::create($validated);
 
         alert('You\'ve been registered successfully!');
 

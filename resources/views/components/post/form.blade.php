@@ -11,5 +11,10 @@
         <x-trix name="content" value="{{ $post->content ?? '' }}"/>
     </x-form-item>
 
+    <x-form-item>
+        <x-label required>{{ __('Publish Date') }}</x-label>
+        <x-input name="published_at" value="{{ $post->published_at ?? '' }}" placeholder="dd.mm.yyyy"/>
+    </x-form-item>
+
     <x-button type="submit">{{ __($btn_title) }}</x-button>
 </x-form>

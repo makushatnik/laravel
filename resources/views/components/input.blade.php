@@ -1,4 +1,4 @@
-@props('value')
+@props(['value' => null])
 
 <input {{ $attributes->class([
     'form-control',

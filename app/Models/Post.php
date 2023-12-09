@@ -14,7 +14,12 @@ class Post extends Model
         'published_at',
     ];
 
-    protected $dates = [
-        'published_at',
-    ]
+    protected $casts = [
+        'author'       => 'integer',
+        'published_at' => 'datetime',
+    ];
+
+    public function isPublished(): bool {
+        return isset($this->published_at);
+    }
 }

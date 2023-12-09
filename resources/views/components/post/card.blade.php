@@ -6,8 +6,8 @@
             </a>
         </h2>
         
-        <p>
-            {{ $post->content }}
-        </p>
+        <div class="small text-muted">
+            {{ $post->published_at->format('d.m.Y H:i:s') }}
+        </div>
     </x-card-body>
 </x-card>

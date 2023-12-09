@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Post\StorePostRequest;
+use App\Models\Post;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -13,12 +16,8 @@ class PostController extends Controller
 
         $categories = [null => __('All') ];
 
-        $post = (object) [
-            'id' => 123,
-            'title' => 'Post title',
-            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
-        ];
-        $posts = array_fill(0, 10, $post);
+        $posts = Post::latest('published_at')->paginate(config('pageSize'), ['id', 'title', 'published_at']);
+
         return view('posts.index', compact('posts', 'categories'));
     }
 
@@ -26,18 +25,16 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(StorePostRequest $request, $post) {
+    public function store(StorePostRequest $request) {
         $validated = $request->validated();
+        $post = $this->createPost($validated);
+        alert("Post with ID - {$post->id} was created or found.");
 
         return redirect()->route('posts.index');
     }
 
     public function show($post_id) {
-        $post = (object) [
-            'id' => 123,
-            'title' => 'Post title',
-            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
-        ];
+        $post = Post::where('author', Auth::id())->findOrFail($post_id, ['id', 'title', 'published_at']);
         return view('posts.show', compact('post'));
     }
 
@@ -50,15 +47,24 @@ class PostController extends Controller
         return view('posts.edit', compact('post'));
     }
 
-    public function update(Request $request, $post_id) {
-        $title = $request->input('title');
-        $content = $request->content('content');
+    public function update(StorePostRequest $request, $post_id) {
+        $validated = $request->validated();
 
         return redirect()->back();
     }
 
     public function delete($post_id) {
-
+        
         return redirect()->route('posts.index');
+    }
+
+    private function createPost(array $validated) {
+        return Post::firstOrCreate([
+            'author'       => Auth::id(),
+            'title'        => $validated['title'],
+        ], [
+            'content'      => $validated['content'],
+            'published_at' => new Carbon($validated['published_at']) ?? null,
+        ]);
     }
 }
