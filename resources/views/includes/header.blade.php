@@ -23,6 +23,18 @@
             </ul>
 
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                @if(Auth::check())
+                <li class="nav-item">
+                    <a href="{{ route('profile') }}" class="nav-link {{ active_link('profile') }}" aria-current="page">
+                        {{ __('Profile') }}
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('logout') }}" class="nav-link {{ active_link('logout') }}" aria-current="page">
+                        {{ __('Logout') }}
+                    </a>
+                </li>
+                @else
                 <li class="nav-item">
                     <a href="{{ route('login') }}" class="nav-link {{ active_link('login_form') }}" aria-current="page">
                         {{ __('Login') }}
@@ -33,6 +45,7 @@
                         {{ __('Register') }}
                     </a>
                 </li>
+                @endif
             </ul>
         </div>
     </div>

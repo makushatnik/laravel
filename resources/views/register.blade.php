@@ -22,7 +22,7 @@
 
     <x-form-item>
         <x-label required>{{ __('Password confirmation') }}</x-label>
-        <x-input type="password" name="password_confirm" />
+        <x-input type="password" name="password_confirmation" />
     </x-form-item>
 
     <x-form-item>

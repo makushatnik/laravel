@@ -32,7 +32,7 @@ Route::middleware('guest')->group(function() {
 });
 
 Route::middleware(['auth', 'active'])->group(function() {
-    // Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
@@ -45,8 +45,6 @@ Route::middleware(['auth', 'active'])->group(function() {
 
     // Route::resource('/comments');
 });
-
-Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
 
 Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
 Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
