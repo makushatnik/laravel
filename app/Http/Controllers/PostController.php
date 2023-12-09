@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Post\StorePostRequest;
-use App\Models\Post;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\Post\FilterRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Service\PostService;
 
 class PostController extends Controller
 {
-    public function index(Request $request) {
-        $search = $request->input('search');
-        $category_id = $request->input('category_id');
+    private $postService;
+    
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
+    }
 
+    public function index(FilterRequest $request) {
         $categories = [null => __('All') ];
 
-        $posts = Post::latest('published_at')->paginate(config('pageSize'), ['id', 'title', 'published_at']);
-
+        $posts = $this->postService->list($request->validated());
         return view('posts.index', compact('posts', 'categories'));
     }
 
@@ -25,46 +26,35 @@ class PostController extends Controller
         return view('posts.create');
     }
 
-    public function store(StorePostRequest $request) {
-        $validated = $request->validated();
-        $post = $this->createPost($validated);
+    public function store(StoreRequest $request) {
+        $post = $this->postService->create($request->validated());
         alert("Post with ID - {$post->id} was created or found.");
 
         return redirect()->route('posts.index');
     }
 
     public function show($post_id) {
-        $post = Post::where('author', Auth::id())->findOrFail($post_id, ['id', 'title', 'published_at']);
+        $post = $this->postService->findOne($post_id);
         return view('posts.show', compact('post'));
     }
 
     public function edit($post_id) {
-        $post = (object) [
-            'id' => 123,
-            'title' => 'Post title',
-            'content' => 'zdfsdgdfgdffffffffffffffsdfs'
-        ];
+        $post = $this->postService->findOne($post_id);
         return view('posts.edit', compact('post'));
     }
 
-    public function update(StorePostRequest $request, $post_id) {
-        $validated = $request->validated();
-
-        return redirect()->back();
+    public function update(StoreRequest $request, $post_id) {
+        $this->postService->update($request->validated(), $post_id);
+        return redirect()->route('posts.show', $post_id);
     }
 
-    public function delete($post_id) {
-        
+    public function publish($post_id) {
+        $this->postService->publish($post_id);
         return redirect()->route('posts.index');
     }
 
-    private function createPost(array $validated) {
-        return Post::firstOrCreate([
-            'author'       => Auth::id(),
-            'title'        => $validated['title'],
-        ], [
-            'content'      => $validated['content'],
-            'published_at' => new Carbon($validated['published_at']) ?? null,
-        ]);
+    public function delete($post_id) {
+        $this->postService->delete($post_id);
+        return redirect()->route('posts.index');
     }
 }

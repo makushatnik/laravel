@@ -20,6 +20,11 @@
                         {{ __('Posts') }}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('about') }}" class="nav-link {{ active_link('about') }}" aria-current="page">
+                        {{ __('About') }}
+                    </a>
+                </li>
             </ul>
 
             <ul class="navbar-nav ms-auto mb-2 mb-md-0">

@@ -22,7 +22,7 @@ Route::get('/health', [Controller::class, 'health']);
 
 Route::get('/about', function () {
     return view('about');
-});
+})->name('about');
 
 Route::middleware('guest')->group(function() {
     Route::get('/login', [AuthController::class, 'login_form'])->name('login_form');
@@ -35,20 +35,13 @@ Route::middleware(['auth', 'active'])->group(function() {
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-    // Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-    // Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-    // Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')->whereNumber('post');
-    // Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit')->whereNumber('post');
-    // Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update')->whereNumber('post');
+    Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
+    Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
+    Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
+    Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')->whereNumber('post');
+    Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit')->whereNumber('post');
+    Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update')->whereNumber('post');
     Route::delete('/posts/{post}', [PostController::class, 'delete'])->name('posts.delete')->whereNumber('post');
 
     // Route::resource('/comments');
 });
-
-Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
-Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
-Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show')->whereNumber('post');
-Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
-Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->name('posts.edit')->whereNumber('post');
-Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update')->whereNumber('post');

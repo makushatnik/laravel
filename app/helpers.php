@@ -9,8 +9,8 @@ if (!function_exists('active_link')) {
 }
 
 if (!function_exists('alert')) {
-    function alert(string $text) {
-        session(['alert' => __($text)]);
+    function alert(string $text, string $type = 'success') {
+        session(['alert' => __($text), 'alert_type' => __($type)]);
     }
 }
 

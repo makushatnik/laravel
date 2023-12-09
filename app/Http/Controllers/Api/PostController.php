@@ -3,37 +3,65 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Post\FilterRequest;
+use App\Http\Requests\Post\StoreRequest;
+use App\Service\PostService;
 
 class PostController extends Controller
 {
-    public function index() {
-        return 'Index';
-        // return view('posts');
+    private $postService;
+    
+    public function __construct(PostService $postService)
+    {
+        $this->postService = $postService;
     }
 
-    public function create() {
-        return view('posts.create');
+    public function index(FilterRequest $request) {
+        $filter = $request->validated();
+        $posts = $this->postService->list($filter);
+        return response()->json([
+            'result' => $posts,
+            'errors' => null,
+        ], 200);
     }
 
-    public function store(Request $request, $post) {
-        return 'Stored!';
+    public function create(StoreRequest $request) {
+        $this->postService->create($request->validated());
+        return response()->json([
+            'result' => 'Created',
+            'errors' => null,
+        ], 201);
     }
 
     public function show($post_id) {
-        return 'Show #'.$post_id;
-        // return view('posts.show', ['post_id' => $post_id]);
+        $post = $this->postService->findOne($post_id);
+        return response()->json([
+            'result' => $post,
+            'errors' => null,
+        ], 200);
     }
 
-    public function edit($post_id) {
-        return view('posts.edit');
+    public function update(StoreRequest $request, $post_id) {
+        $this->postService->update($request->validated(), $post_id);
+        return response()->json([
+            'result' => 'Updated',
+            'errors' => null,
+        ], 200);
     }
 
-    public function update(Request $request, $post_id) {
-        return 'Updated!';
+    public function publish($post_id) {
+        $this->postService->publish($post_id);
+        return response()->json([
+            'result' => 'Updated',
+            'errors' => null,
+        ], 200);
     }
 
     public function delete($post_id) {
-        return 'Deleted!';
+        $this->postService->delete($post_id);
+        return response()->json([
+            'result' => 'Deleted',
+            'errors' => null,
+        ], 200);
     }
 }

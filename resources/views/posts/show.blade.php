@@ -20,6 +20,8 @@
 </x-title>
 
 <p>
-    {{ $post->content }}
+    {!! $post->content !!}
 </p>
+<p>Published at: {{ $post->published_at }}</p>
+<p>Created at: {{ $post->created_at }}</p>
 @endsection

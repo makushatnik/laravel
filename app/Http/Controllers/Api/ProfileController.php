@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Service\UserService;
 
 class ProfileController extends Controller
@@ -15,6 +16,9 @@ class ProfileController extends Controller
 
     public function show() {
         $user = $this->userService->getProfile();
-        return view('profile', compact('user'));
+        return response()->json([
+            'result' => $user,
+            'errors' => null,
+        ], 200);
     }
 }

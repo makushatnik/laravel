@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\SignupRequest;
 use App\Service\AuthService;
@@ -17,37 +18,38 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function login_form() {
-        return view('login');
-    }
-
     public function login(LoginRequest $request) {
-        $data = $request->validated();
-        if ($this->authService->login($data)) {
+        if ($this->authService->login($request->validated())) {
             $request->session()->regenerate();
             alert('Welcome!');
-            return redirect()->intended('profile');
+
+            return response()->json([
+                'result' => ['token' => '1234abc'],
+                'errors' => null,
+            ], 200);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
-    }
-
-    public function register_form() {
-        return view('register');
+        return response()->json([
+            'result' => [],
+            'errors' => 'The provided credentials do not match our records.',
+        ], 404);
     }
 
     public function register(SignupRequest $request) {
         if ($this->authService->createUser($request->validated())) {
             $request->session()->regenerate();
             alert('You\'ve been registered successfully!!');
-            return redirect()->intended('profile');
+
+            return response()->json([
+                'result' => 'Created',
+                'errors' => null,
+            ], 201);
         }
 
-        return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+        return response()->json([
+            'result' => [],
+            'errors' => 'The user input error.',
+        ], 401);
     }
 
     public function logout(Request $request) {
@@ -58,6 +60,9 @@ class AuthController extends Controller
 
         alert('Your password had been stolen!');
 
-        return view('home');
+        return response()->json([
+            'result' => 'Created',
+            'errors' => null,
+        ], 200);
     }
 }
