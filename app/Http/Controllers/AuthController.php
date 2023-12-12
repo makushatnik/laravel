@@ -22,8 +22,7 @@ class AuthController extends Controller
     }
 
     public function login(LoginRequest $request) {
-        $data = $request->validated();
-        if ($this->authService->login($data)) {
+        if ($this->authService->login($request->validated())) {
             $request->session()->regenerate();
             alert('Welcome!');
             return redirect()->intended('profile');
@@ -46,8 +45,8 @@ class AuthController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
-        ])->onlyInput('email');
+            'email' => 'You didn\'t fill some data.',
+        ]);
     }
 
     public function logout(Request $request) {

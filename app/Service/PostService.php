@@ -14,9 +14,9 @@ class PostService {
         return $posts;
     }
 
-    public function findOne($post_id): Post {
+    public function findOne($post_id): Post|null {
         $post = Post::where('author', Auth::id())
-                    ->findOrFail($post_id, ['id', 'title', 'content', 'published_at', 'created_at', 'updated_at']);
+                    ->find($post_id, ['id', 'title', 'content', 'published_at', 'created_at', 'updated_at']);
         return $post;
     }
 
@@ -31,7 +31,7 @@ class PostService {
     }
 
     public function update(array $data, $post_id): bool {
-        $post = Post::where('author', Auth::id())->findOrFail($post_id, ['id', 'title', 'published_at']);
+        $post = Post::where('author', Auth::id())->find($post_id, ['id', 'title', 'published_at']);
         if ($post) {
             $post->title = $data['title'];
             $post->content = $data['content'];
@@ -43,7 +43,7 @@ class PostService {
     }
 
     public function publish($post_id): bool {
-        $post = Post::where('author', Auth::id())->findOrFail($post_id, ['id', 'title', 'published_at']);
+        $post = Post::where('author', Auth::id())->find($post_id, ['id', 'title', 'published_at']);
         if ($post) {
             $post->published_at = new Carbon(now());
             $post->save();
@@ -53,7 +53,7 @@ class PostService {
     }
 
     public function delete($post_id): bool {
-        $post = Post::where('author', Auth::id())->findOrFail($post_id, ['id', 'title', 'published_at']);
+        $post = Post::where('author', Auth::id())->find($post_id, ['id', 'title', 'published_at']);
         if ($post) {
             $post->delete();
             return true;

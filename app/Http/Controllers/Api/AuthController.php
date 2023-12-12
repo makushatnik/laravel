@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\Auth\SignupRequest;
+use Illuminate\Routing\Controller;
 use App\Service\AuthService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -18,10 +16,8 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function login(LoginRequest $request) {
-        if ($this->authService->login($request->validated())) {
-            $request->session()->regenerate();
-            alert('Welcome!');
+    public function login(Request $request) {
+        if ($this->authService->login($request->all())) {
 
             return response()->json([
                 'result' => ['token' => '1234abc'],
@@ -35,10 +31,8 @@ class AuthController extends Controller
         ], 404);
     }
 
-    public function register(SignupRequest $request) {
-        if ($this->authService->createUser($request->validated())) {
-            $request->session()->regenerate();
-            alert('You\'ve been registered successfully!!');
+    public function register(Request $request) {
+        if ($this->authService->createUser($request->all())) {
 
             return response()->json([
                 'result' => 'Created',
@@ -49,19 +43,16 @@ class AuthController extends Controller
         return response()->json([
             'result' => [],
             'errors' => 'The user input error.',
-        ], 401);
+        ], 405);
     }
 
     public function logout(Request $request) {
+        // auth()->user()->tokens()->delete();
+        // auth()->user()->logout();
         Auth::logout();
- 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        alert('Your password had been stolen!');
 
         return response()->json([
-            'result' => 'Created',
+            'result' => 'Successfully logged out',
             'errors' => null,
         ], 200);
     }

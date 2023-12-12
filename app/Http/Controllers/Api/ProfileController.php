@@ -17,7 +17,7 @@ class ProfileController extends Controller
     public function show() {
         $user = $this->userService->getProfile();
         return response()->json([
-            'result' => $user,
+            'result' => ['user' => $user],
             'errors' => null,
         ], 200);
     }

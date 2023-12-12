@@ -3,9 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Post\FilterRequest;
-use App\Http\Requests\Post\StoreRequest;
 use App\Service\PostService;
+use Illuminate\Support\Facades\Request;
 
 class PostController extends Controller
 {
@@ -16,17 +15,16 @@ class PostController extends Controller
         $this->postService = $postService;
     }
 
-    public function index(FilterRequest $request) {
-        $filter = $request->validated();
-        $posts = $this->postService->list($filter);
+    public function index(Request $request) {
+        $posts = $this->postService->list($request->all());
         return response()->json([
             'result' => $posts,
             'errors' => null,
         ], 200);
     }
 
-    public function create(StoreRequest $request) {
-        $this->postService->create($request->validated());
+    public function create(Request $request) {
+        $this->postService->create($request->all());
         return response()->json([
             'result' => 'Created',
             'errors' => null,
@@ -35,14 +33,21 @@ class PostController extends Controller
 
     public function show($post_id) {
         $post = $this->postService->findOne($post_id);
+        if (empty($post)) {
+            return response()->json([
+                'result' => null,
+                'errors' => 'Not Found!',
+            ], 404);
+        }
+
         return response()->json([
             'result' => $post,
             'errors' => null,
         ], 200);
     }
 
-    public function update(StoreRequest $request, $post_id) {
-        $this->postService->update($request->validated(), $post_id);
+    public function update(Request $request, $post_id) {
+        $this->postService->update($request->all(), $post_id);
         return response()->json([
             'result' => 'Updated',
             'errors' => null,
@@ -62,6 +67,6 @@ class PostController extends Controller
         return response()->json([
             'result' => 'Deleted',
             'errors' => null,
-        ], 200);
+        ], 204);
     }
 }

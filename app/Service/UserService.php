@@ -8,6 +8,13 @@ use Illuminate\Support\Facades\Auth;
 class UserService {
 
     public function getProfile() {
-        return User::find(Auth::id());
+        $user = User::find(Auth::id());
+        if (empty($user)) {
+            $user = Auth::user();
+            if (empty($user)) {
+                $user = auth()->user();
+            }
+        }
+        return $user;
     }
 }
